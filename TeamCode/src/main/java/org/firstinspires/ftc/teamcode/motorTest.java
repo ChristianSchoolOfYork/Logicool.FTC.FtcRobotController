@@ -4,7 +4,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-
+/*
+Controller 1
+-left and right thumbsticks are tank drive
+Controller 2
+-left thumbstick: arm movement
+-right thumbstick: wrist movement
+-left and right bumpers: intake
+-a: open grabber
+-b: close grabber
+ */
 @TeleOp
 public class motorTest extends LinearOpMode {
 
@@ -17,6 +26,8 @@ public class motorTest extends LinearOpMode {
         Servo intake = hardwareMap.get(Servo.class, "Intake");
         DcMotor arm = hardwareMap.get(DcMotor.class, "Arm");
         DcMotor wrist = hardwareMap.get(DcMotor.class, "Wrist");
+        Servo grab = hardwareMap.get(Servo.class, "Gripper");
+        gripperState Gripper = new gripperState(grab,0.5,0.3);
         boolean isDpadLeft =false,isDpadRight=false;
 
         Trim t = new Trim();
@@ -79,6 +90,12 @@ public class motorTest extends LinearOpMode {
                 intake.setPosition((intake.getPosition()-.05)% 1.0);
                 sleep(25);
                 idle();
+            }
+            if (gamepad2.a){
+                Gripper.close();
+            }
+            if (gamepad2.b){
+                Gripper.open();
             }
             telemetry.update();
         }
