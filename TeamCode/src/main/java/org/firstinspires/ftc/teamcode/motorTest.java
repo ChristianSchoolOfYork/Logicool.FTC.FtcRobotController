@@ -21,30 +21,35 @@ public class motorTest extends LinearOpMode {
     public void runOpMode() {
         DcMotor leftMotor = hardwareMap.get(DcMotor.class, "Left");
         DcMotor rightMotor = hardwareMap.get(DcMotor.class, "Right");
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-        Servo intake = hardwareMap.get(Servo.class, "Intake");
         DcMotor arm = hardwareMap.get(DcMotor.class, "Arm");
         DcMotor wrist = hardwareMap.get(DcMotor.class, "Wrist");
+        Servo intake = hardwareMap.get(Servo.class, "Intake");
         Servo grab = hardwareMap.get(Servo.class, "Gripper");
-        gripperState Gripper = new gripperState(grab,0.5,0.3);
         boolean isDpadLeft =false,isDpadRight=false;
 
+        gripperState Gripper = new gripperState(grab,0.5,0.3);
+        intakeLogic collector = new intakeLogic(this, intake, 0.94, 0.06);
         Trim t = new Trim();
         PowerLevels pl;
+
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
 
         waitForStart();
         intake.setDirection(Servo.Direction.FORWARD);
         intake.getController().pwmEnable();
         while (opModeIsActive()) {
-            telemetry.addData("Status", "Running");
-            telemetry.addData("left Trim", t.getLeftTrim());
-            telemetry.addData("right Trim", t.getRightTrim());
             pl=t.getPowerLevel(1,1);
             float leftThumbstickValue = gamepad1.left_stick_y;
             float rightThumbstickValue = gamepad1.right_stick_y;
+
             telemetry.addData("Left Thumbstick Value", leftThumbstickValue);
             telemetry.addData("Right Thumbstick Value", rightThumbstickValue);
+            telemetry.addData("Status", "Running");
+            telemetry.addData("left Trim", t.getLeftTrim());
+            telemetry.addData("right Trim", t.getRightTrim());
+            telemetry.addData("Intake", intake.getPosition());
+            telemetry.update();
 
             if (gamepad1.dpad_left && !isDpadLeft){
                 t.addLeft();
@@ -80,24 +85,20 @@ public class motorTest extends LinearOpMode {
             rightMotor.setPower(-rightThumbstickValue * pl.getRightPower());
             arm.setPower(gamepad2.left_stick_y*.5);
             wrist.setPower(gamepad2.right_stick_y*.5);
-            telemetry.addData("Intake", intake.getPosition());
-            if(gamepad2.right_bumper && (intake.getPosition()% 1) < 0.94) {
-                intake.setPosition((intake.getPosition()+.05)% 1.0);
-                sleep(25);
-                idle();
+
+            if(gamepad2.right_bumper) {
+                collector.takeIn();
             }
-            if(gamepad2.left_bumper && (intake.getPosition()% 1) > 0.06) {
-                intake.setPosition((intake.getPosition()-.05)% 1.0);
-                sleep(25);
-                idle();
+            if(gamepad2.left_bumper) {
+                collector.takeOut();
             }
+
             if (gamepad2.a){
                 Gripper.close();
             }
             if (gamepad2.b){
                 Gripper.open();
             }
-            telemetry.update();
         }
     }
 
