@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * A class to simplify using the intakeServo on the robot
- * @author josiah
+ * @author Josiah, Ethan
  */
 public class Collector {
     private final Servo intakeServo;

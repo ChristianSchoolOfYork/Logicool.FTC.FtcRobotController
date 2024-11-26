@@ -15,10 +15,15 @@ Controller 2
 -b: close grabber
  */
 @TeleOp
-public class mainOp extends LinearOpMode implements Sleeper{
+public class MainOp extends LinearOpMode implements Sleeper{
 
     @Override
     public void runOpMode() {
+
+        double currentTimeSeconds = 0;
+        double lastFrameTimeSeconds = 0;
+        double deltaTimeSeconds = 0;
+
         DcMotor leftMotor = hardwareMap.get(DcMotor.class, "Left");
         DcMotor rightMotor = hardwareMap.get(DcMotor.class, "Right");
         DcMotor arm = hardwareMap.get(DcMotor.class, "Arm");
@@ -39,7 +44,21 @@ public class mainOp extends LinearOpMode implements Sleeper{
         waitForStart();
         intake.setDirection(Servo.Direction.FORWARD);
         intake.getController().pwmEnable();
+       double TotalElapsedTime = 0;
         while (opModeIsActive()) {
+
+            currentTimeSeconds = System.currentTimeMillis() * .001;
+            if(lastFrameTimeSeconds == 0)
+            {
+                lastFrameTimeSeconds = currentTimeSeconds;
+            }
+            deltaTimeSeconds = currentTimeSeconds - lastFrameTimeSeconds;
+            lastFrameTimeSeconds = currentTimeSeconds;
+
+            TotalElapsedTime = TotalElapsedTime + deltaTimeSeconds;
+
+            telemetry. addData("Total Elapsed Seconds", TotalElapsedTime);
+
             pl=t.getPowerLevel(1,1);
             float leftThumbstickValue = gamepad1.left_stick_y;
             float rightThumbstickValue = gamepad1.right_stick_y;
