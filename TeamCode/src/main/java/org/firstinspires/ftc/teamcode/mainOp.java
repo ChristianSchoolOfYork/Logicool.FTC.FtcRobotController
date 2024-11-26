@@ -15,7 +15,7 @@ Controller 2
 -b: close grabber
  */
 @TeleOp
-public class motorTest extends LinearOpMode {
+public class mainOp extends LinearOpMode implements Sleeper{
 
     @Override
     public void runOpMode() {
@@ -26,9 +26,10 @@ public class motorTest extends LinearOpMode {
         Servo intake = hardwareMap.get(Servo.class, "Intake");
         Servo grab = hardwareMap.get(Servo.class, "Gripper");
         boolean isDpadLeft =false,isDpadRight=false;
-
-        gripperState Gripper = new gripperState(grab,0.5,0.3);
-        intakeLogic collector = new intakeLogic(this, intake, 0.94, 0.06);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Gripper gripper = new Gripper(grab,0.5,0.3);
+        Collector collector = new Collector(this, intake, 0.94, 0.06);
         Trim t = new Trim();
         PowerLevels pl;
 
@@ -49,6 +50,8 @@ public class motorTest extends LinearOpMode {
             telemetry.addData("left Trim", t.getLeftTrim());
             telemetry.addData("right Trim", t.getRightTrim());
             telemetry.addData("Intake", intake.getPosition());
+            telemetry.addData("arm", arm.getCurrentPosition());
+            telemetry.addData("wrist",wrist.getCurrentPosition());
             telemetry.update();
 
             if (gamepad1.dpad_left && !isDpadLeft){
@@ -84,7 +87,7 @@ public class motorTest extends LinearOpMode {
             leftMotor.setPower(leftThumbstickValue * pl.getLeftPower());
             rightMotor.setPower(-rightThumbstickValue * pl.getRightPower());
             arm.setPower(gamepad2.left_stick_y*.5);
-            wrist.setPower(gamepad2.right_stick_y*.5);
+            wrist.setPower(gamepad2.right_stick_y*-.5);
 
             if(gamepad2.right_bumper) {
                 collector.takeIn();
@@ -94,12 +97,19 @@ public class motorTest extends LinearOpMode {
             }
 
             if (gamepad2.a){
-                Gripper.close();
+                gripper.close();
             }
             if (gamepad2.b){
-                Gripper.open();
+                gripper.open();
             }
+
         }
+    }
+
+    @Override
+    public void sleepFor(long milliseconds) {
+        this.sleep(milliseconds);
+        this.idle();
     }
 
 }
