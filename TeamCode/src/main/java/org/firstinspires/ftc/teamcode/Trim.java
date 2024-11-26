@@ -1,36 +1,72 @@
 package org.firstinspires.ftc.teamcode;
 
-
+/**
+ * A class that is called to feed the current trimmed motor values out of the {@linkplain Trim} class.
+ * @author josiah
+ */
 class PowerLevels{
-    private float leftPower;
-    private float rightPower;
+    private final float leftPower;
+    private final float rightPower;
 
+    /**
+     * A constructor only meant to be used by {@linkplain Trim} class.
+     * @param leftPower The left power value
+     * @param rightPower The right power value
+     */
     public PowerLevels(float leftPower, float rightPower){
         this.leftPower = leftPower;
         this.rightPower = rightPower;
     }
 
+    /**
+     * Gives you the left power value,
+     * in the case of using this in conjunction with
+     * {@link Trim#getPowerLevel(float, float) Trim.getPowerLevel()},
+     * gives you the left motor value after trimming.
+     * @return left power
+     */
     public float getLeftPower(){
         return leftPower;
     }
-
+    /**
+     * Gives you the right power value,
+     * in the case of using this in conjunction with
+     * {@link Trim#getPowerLevel(float, float) Trim.getPowerLevel()},
+     * gives you the right motor value after trimming.
+     * @return right power
+     */
     public float getRightPower(){
         return rightPower;
     }
 }
+
+/** A class to apply a trim to the motors on the robot
+ * @author josiah, Ethan
+ */
 public class Trim {
     private float leftTrim = 1;
     private float rightTrim = 1;
     private final float TRIMAMOUNT = 0.01f;
 
+    /**
+     * Returns the left trim value
+     * @return the left trim as a value between 0 and 1
+     */
     public float getLeftTrim(){
         return leftTrim;
     }
 
+    /**
+     * Returns the right trim value
+     * @return the right trim as a value between 0 and 1
+     */
     public float getRightTrim(){
         return rightTrim;
     }
 
+    /**
+     * Trims to the left by the value of {@linkplain Trim#TRIMAMOUNT}
+     */
     public void addLeft(){
 
         if(rightTrim == 1)
@@ -42,6 +78,10 @@ public class Trim {
             rightTrim = Math.min(rightTrim + TRIMAMOUNT, 1);
         }
     }
+
+    /**
+     * Trims to the right by the value of {@linkplain Trim#TRIMAMOUNT}
+     */
     public void addRight(){
 
         if(leftTrim == 1)
@@ -54,6 +94,12 @@ public class Trim {
         }
     }
 
+    /**
+     * Returns what the motors should be set to by applying the trim to the driving values
+     * @param left The untrimmed value of the left motor
+     * @param right The untrimmed value of the right motor
+     * @return A {@link PowerLevels} containing the trimmed motor values
+     */
     public PowerLevels getPowerLevel(float left, float right){
         return new PowerLevels(left*leftTrim,right*leftTrim);
     }
