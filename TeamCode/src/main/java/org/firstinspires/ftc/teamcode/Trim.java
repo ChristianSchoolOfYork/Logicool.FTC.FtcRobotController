@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 /**
  * A class that is called to feed the current trimmed motor values out of the {@linkplain Trim} class.
  * @author josiah
@@ -47,7 +49,7 @@ public class Trim {
     private float leftTrim = 1;
     private float rightTrim = 1;
     private final float TRIMAMOUNT = 0.01f;
-
+    boolean isDpadLeft =false,isDpadRight=false;
     /**
      * Returns the left trim value
      * @return the left trim as a value between 0 and 1
@@ -104,4 +106,24 @@ public class Trim {
         return new PowerLevels(left*leftTrim,right*leftTrim);
     }
 
+    public void update(Gamepad gamepad1){
+        if (gamepad1.dpad_left && !isDpadLeft){
+            addLeft();
+            isDpadLeft = true;
+        }
+
+        if (!gamepad1.dpad_left){
+            isDpadLeft = false;
+        }
+
+
+        if (gamepad1.dpad_right && !isDpadRight){
+            addRight();
+            isDpadRight = true;
+        }
+
+        if (!gamepad1.dpad_right) {
+            isDpadRight = false;
+        }
+    }
 }

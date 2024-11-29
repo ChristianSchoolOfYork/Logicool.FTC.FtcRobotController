@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
@@ -14,7 +15,7 @@ public class Gripper {
     private boolean isMoving = false;
     /**
      * Creates a new instance of Gripper which controls the little claw on the robot. Requires a {@linkplain Servo}, and two doubles: max and min.
-     * @param gripper The Servo that the gripper is on.
+     * @param gripperServo The Servo that the gripper is on.
      * @param min The closed position of the gripper.
      * @param max The open position of the gripper.
      */
@@ -46,6 +47,15 @@ public class Gripper {
             gripperServo.setPosition(min);
             isGripperOpen = false;
             isMoving = false;
+        }
+    }
+
+    public void update(Gamepad gamepad2){
+        if (gamepad2.a){
+            close();
+        }
+        if (gamepad2.b){
+            open();
         }
     }
 }

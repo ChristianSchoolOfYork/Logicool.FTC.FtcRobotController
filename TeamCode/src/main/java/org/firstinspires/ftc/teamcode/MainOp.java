@@ -15,7 +15,7 @@ Controller 2
 -b: close grabber
  */
 @TeleOp
-public class mainOp extends LinearOpMode implements Sleeper{
+public class MainOp extends LinearOpMode implements Sleeper{
 
     @Override
     public void runOpMode() {
@@ -25,11 +25,12 @@ public class mainOp extends LinearOpMode implements Sleeper{
         DcMotor wrist = hardwareMap.get(DcMotor.class, "Wrist");
         Servo intake = hardwareMap.get(Servo.class, "Intake");
         Servo grab = hardwareMap.get(Servo.class, "Gripper");
-        boolean isDpadLeft =false,isDpadRight=false;
+
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Gripper gripper = new Gripper(grab,0.5,0.3);
         Collector collector = new Collector(this, intake, 0.94, 0.06);
+        MainDrive drive = new MainDrive(gamepad1,leftMotor,rightMotor);
         Trim t = new Trim();
         PowerLevels pl;
 
@@ -54,54 +55,12 @@ public class mainOp extends LinearOpMode implements Sleeper{
             telemetry.addData("wrist",wrist.getCurrentPosition());
             telemetry.update();
 
-            if (gamepad1.dpad_left && !isDpadLeft){
-                t.addLeft();
-                isDpadLeft = true;
-            }
-
-            if (!gamepad1.dpad_left){
-                isDpadLeft = false;
-            }
-
-            
-            if (gamepad1.dpad_right && !isDpadRight){
-                t.addRight();
-                isDpadRight = true;
-            }
-
-            if (!gamepad1.dpad_right) {
-                isDpadRight = false;
-            }
-
-            /*if (gamepad1.a) {
-                leftMotor.setPower(-pl.getLeftPower());
-                //0.95 was the value that the Trim was set to before I added my code
-                rightMotor.setPower(pl.getRightPower());
-            } else if (gamepad1.b) {
-                leftMotor.setPower(pl.getLeftPower());
-                rightMotor.setPower(-pl.getRightPower());
-            } else {
-                leftMotor.setPower(0);
-                rightMotor.setPower(0);
-            }*/
-            leftMotor.setPower(leftThumbstickValue * pl.getLeftPower());
-            rightMotor.setPower(-rightThumbstickValue * pl.getRightPower());
+            t.update(gamepad1);
+            drive.update(pl);
             arm.setPower(gamepad2.left_stick_y*.5);
             wrist.setPower(gamepad2.right_stick_y*-.5);
-
-            if(gamepad2.right_bumper) {
-                collector.takeIn();
-            }
-            if(gamepad2.left_bumper) {
-                collector.takeOut();
-            }
-
-            if (gamepad2.a){
-                gripper.close();
-            }
-            if (gamepad2.b){
-                gripper.open();
-            }
+            collector.update(gamepad2);
+            gripper.update(gamepad2);
 
         }
     }

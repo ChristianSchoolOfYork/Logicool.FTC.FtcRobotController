@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
@@ -45,6 +46,15 @@ public class Collector {
         if (((intakeServo.getPosition()% 1) > min)){
             intakeServo.setPosition((intakeServo.getPosition()-.05)% 1.0);
             l.sleepFor(25);
+        }
+    }
+
+    public void update(Gamepad gamepad2){
+        if(gamepad2.right_bumper) {
+            takeIn();
+        }
+        if(gamepad2.left_bumper) {
+            takeOut();
         }
     }
 }
