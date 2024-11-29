@@ -31,6 +31,7 @@ public class MainOp extends LinearOpMode implements Sleeper{
         Gripper gripper = new Gripper(grab,0.5,0.3);
         Collector collector = new Collector(this, intake, 0.94, 0.06);
         MainDrive drive = new MainDrive(gamepad1,leftMotor,rightMotor);
+        ArmWrist armWrist = new ArmWrist(arm, wrist);
         Trim t = new Trim();
         PowerLevels pl;
 
@@ -57,8 +58,7 @@ public class MainOp extends LinearOpMode implements Sleeper{
 
             t.update(gamepad1);
             drive.update(pl);
-            arm.setPower(gamepad2.left_stick_y*.5);
-            wrist.setPower(gamepad2.right_stick_y*-.5);
+            armWrist.update(gamepad2);
             collector.update(gamepad2);
             gripper.update(gamepad2);
 
