@@ -37,15 +37,22 @@ public class MainOp extends LinearOpMode implements Sleeper{
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
+        long currentTime = System.currentTimeMillis();
+        float deltaTime = 0.0f;
+         long lastCurrentTime = System.currentTimeMillis();
         waitForStart();
         intake.setDirection(Servo.Direction.FORWARD);
         intake.getController().pwmEnable();
         while (opModeIsActive()) {
+            lastCurrentTime = currentTime;
+            currentTime = System.currentTimeMillis();
+            deltaTime = (currentTime - lastCurrentTime) * 0.001f;
+
             pl=t.getPowerLevel(1,1);
             float leftThumbstickValue = gamepad1.left_stick_y;
             float rightThumbstickValue = gamepad1.right_stick_y;
 
+            telemetry.addData("Delta time", deltaTime);
             telemetry.addData("Left Thumbstick Value", leftThumbstickValue);
             telemetry.addData("Right Thumbstick Value", rightThumbstickValue);
             telemetry.addData("Status", "Running");
@@ -57,7 +64,7 @@ public class MainOp extends LinearOpMode implements Sleeper{
             telemetry.update();
 
             t.update(gamepad1);
-            drive.update(pl);
+            drive.update(pl, deltaTime);
             armWrist.update(gamepad2);
             collector.update(gamepad2);
             gripper.update(gamepad2);
