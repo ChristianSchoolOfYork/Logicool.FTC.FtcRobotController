@@ -1,9 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.annotation.SuppressLint;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import java.util.Locale;
+
 /*
 Controller 1
 -left and right thumbsticks are tank drive
@@ -16,6 +21,7 @@ Controller 2
  */
 @TeleOp
 public class MainOp extends LinearOpMode implements Sleeper{
+
 
     @Override
     public void runOpMode() {
@@ -43,17 +49,11 @@ public class MainOp extends LinearOpMode implements Sleeper{
         intake.getController().pwmEnable();
         while (opModeIsActive()) {
             pl=t.getPowerLevel(1,1);
-            float leftThumbstickValue = gamepad1.left_stick_y;
-            float rightThumbstickValue = gamepad1.right_stick_y;
-
-            telemetry.addData("Left Thumbstick Value", leftThumbstickValue);
-            telemetry.addData("Right Thumbstick Value", rightThumbstickValue);
             telemetry.addData("Status", "Running");
+            telemetry.addData("Intake", collector.getPercentage());
+            telemetry.addData("gripper",gripper.getState()?"open":"closed");
             telemetry.addData("left Trim", t.getLeftTrim());
             telemetry.addData("right Trim", t.getRightTrim());
-            telemetry.addData("Intake", intake.getPosition());
-            telemetry.addData("arm", arm.getCurrentPosition());
-            telemetry.addData("wrist",wrist.getCurrentPosition());
             telemetry.update();
 
             t.update(gamepad1);

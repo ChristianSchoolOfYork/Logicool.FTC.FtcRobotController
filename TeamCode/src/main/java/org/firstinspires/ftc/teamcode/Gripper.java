@@ -58,4 +58,7 @@ public class Gripper {
             open();
         }
     }
+    public boolean getState(){
+        return isGripperOpen;
+    }
 }
