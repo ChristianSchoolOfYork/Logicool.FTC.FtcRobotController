@@ -5,8 +5,8 @@ import android.annotation.SuppressLint;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import java.util.Locale;
 
 /*
@@ -16,9 +16,10 @@ Controller 2
 -left thumbstick: arm movement
 -right thumbstick: wrist movement
 -left and right bumpers: intake
--a: open grabber
--b: close grabber
+-a: close grabber
+-b: open grabber
  */
+@SuppressWarnings({"unused"})
 @TeleOp
 public class MainOp extends LinearOpMode implements Sleeper{
 
@@ -31,10 +32,13 @@ public class MainOp extends LinearOpMode implements Sleeper{
         DcMotor wrist = hardwareMap.get(DcMotor.class, "Wrist");
         Servo intake = hardwareMap.get(Servo.class, "Intake");
         Servo grab = hardwareMap.get(Servo.class, "Gripper");
+        DistanceSensor leftDistance = hardwareMap.get(DistanceSensor.class, "left-range-sensor");
+        DistanceSensor rightDistance = hardwareMap.get(DistanceSensor.class, "right-range-sensor");
+        FrontCollisionAvoidance distance = new FrontCollisionAvoidance(leftDistance, rightDistance);
 
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Gripper gripper = new Gripper(grab,0.5,0.3);
+        Gripper gripper = new Gripper(grab,0.1,0.3);
         Collector collector = new Collector(this, intake, 0.94, 0.06);
         MainDrive drive = new MainDrive(gamepad1,leftMotor,rightMotor);
         ArmWrist armWrist = new ArmWrist(arm, wrist);
@@ -52,8 +56,11 @@ public class MainOp extends LinearOpMode implements Sleeper{
             telemetry.addData("Status", "Running");
             telemetry.addData("Intake", collector.getPercentage());
             telemetry.addData("gripper",gripper.getState()?"open":"closed");
+            telemetry.addData("gripper value", grab.getPosition());
             telemetry.addData("left Trim", t.getLeftTrim());
             telemetry.addData("right Trim", t.getRightTrim());
+            telemetry.addData("left distance", distance.getLeftValue());
+            telemetry.addData("right distance", distance.getRightValue());
             telemetry.update();
 
             t.update(gamepad1);
