@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import android.annotation.SuppressLint;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import java.util.Locale;
 
@@ -34,7 +37,9 @@ public class MainOp extends LinearOpMode implements Sleeper{
         Servo grab = hardwareMap.get(Servo.class, "Gripper");
         DistanceSensor leftDistance = hardwareMap.get(DistanceSensor.class, "left-range-sensor");
         DistanceSensor rightDistance = hardwareMap.get(DistanceSensor.class, "right-range-sensor");
-        FrontCollisionAvoidance distance = new FrontCollisionAvoidance(leftDistance, rightDistance);
+        IMU imu = hardwareMap.get(IMU.class, "imu");
+        RevTouchSensor leftBack = hardwareMap.get(RevTouchSensor.class, "back left touch");
+        RevTouchSensor rightBack = hardwareMap.get(RevTouchSensor.class, "back right touch");
 
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -43,7 +48,10 @@ public class MainOp extends LinearOpMode implements Sleeper{
         MainDrive drive = new MainDrive(gamepad1,leftMotor,rightMotor);
         ArmWrist armWrist = new ArmWrist(arm, wrist);
         Trim t = new Trim();
+        FrontCollisionAvoidance distance = new FrontCollisionAvoidance(leftDistance, rightDistance);
+        GyroSensor gyro = new GyroSensor(imu, new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.FORWARD, RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
         PowerLevels pl;
+        TouchSensors touchSensors = new TouchSensors(leftBack, rightBack);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -61,6 +69,9 @@ public class MainOp extends LinearOpMode implements Sleeper{
             telemetry.addData("right Trim", t.getRightTrim());
             telemetry.addData("left distance", distance.getLeftValue());
             telemetry.addData("right distance", distance.getRightValue());
+            telemetry.addData("Yaw, Pitch, And Roll", "%.2f, %.2f, %.2f", gyro.getYaw(),gyro.getPitch(), gyro.getRoll());
+            telemetry.addData("Left Back Touch Sensor", touchSensors.getLeft()? "pressed":"not pressed");
+            telemetry.addData("Right Back Touch Sensor", touchSensors.getRight()? "pressed":"not pressed");
             telemetry.update();
 
             t.update(gamepad1);
