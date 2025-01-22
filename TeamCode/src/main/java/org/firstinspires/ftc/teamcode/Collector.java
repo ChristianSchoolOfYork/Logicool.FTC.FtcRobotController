@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import java.util.Locale;
+
 /**
  * A class to simplify using the intakeServo on the robot
  * @author josiah
@@ -57,4 +59,9 @@ public class Collector {
             takeOut();
         }
     }
+
+    public String getPercentage(){
+        return String.format(Locale.getDefault(), "%d%%", (int) ((intakeServo.getPosition() - ((min + max)/2) ) * (200/(max - min))));
+    }
+
 }
