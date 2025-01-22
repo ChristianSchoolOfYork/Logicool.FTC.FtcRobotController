@@ -96,6 +96,21 @@ public class Trim {
         }
     }
 
+    public void setLeft(float trim){
+        leftTrim = trim;
+        rightTrim = 1;
+    }
+
+    public void setRight(float trim){
+        leftTrim = 1;
+        if (trim < 0){
+            rightTrim = 0;
+        } else if (trim > 1){
+            rightTrim = 1;
+        } else {
+            rightTrim = trim;
+        }
+    }
     /**
      * Returns what the motors should be set to by applying the trim to the driving values
      * @param left The untrimmed value of the left motor
