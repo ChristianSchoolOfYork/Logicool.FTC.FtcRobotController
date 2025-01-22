@@ -25,14 +25,20 @@ public class SquareDrive extends LinearOpMode implements Sleeper {
         PowerLevels pl;
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        gyro.getYaw();
         waitForStart();
-
+        gyro.resetYaw();
 
         drive.setPower(t.getPowerLevel(0.5f,0.5f));
         sleepFor(2000);
         drive.stop();
-        
+        drive.setPower(t.getPowerLevel(0.25f,-0.25f));
+        while (!(gyro.getYaw() < -90)){
+            this.idle();
+            telemetry.addData("Yaw",gyro.getYaw());
+            telemetry.update();
+        }
+        drive.stop();
+
 
     }
 
