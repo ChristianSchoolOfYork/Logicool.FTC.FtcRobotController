@@ -24,7 +24,8 @@ public class Gripper {
         this.max = max;
         this.min = min;
         this.gripperServo.setPosition(min);
-        this.isGripperOpen = false;
+        this.isGripperOpen = true;
+        close();
     }
 
     /**

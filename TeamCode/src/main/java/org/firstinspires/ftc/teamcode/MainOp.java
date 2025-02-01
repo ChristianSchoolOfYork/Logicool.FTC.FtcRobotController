@@ -41,12 +41,16 @@ public class MainOp extends LinearOpMode implements Sleeper{
         RevTouchSensor leftBack = hardwareMap.get(RevTouchSensor.class, "back left touch");
         RevTouchSensor rightBack = hardwareMap.get(RevTouchSensor.class, "back right touch");
 
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        wrist.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         Gripper gripper = new Gripper(grab,0.1,0.3);
         Collector collector = new Collector(this, intake, 0.94, 0.06);
-        MainDrive drive = new MainDrive(gamepad1,leftMotor,rightMotor);
-        ArmWrist armWrist = new ArmWrist(arm, wrist);
+        MainDrive drive = new MainDrive(gamepad1,leftMotor,rightMotor, telemetry);
+        ArmWrist armWrist = new ArmWrist(arm, wrist, telemetry);
         Trim t = new Trim();
         FrontCollisionAvoidance distance = new FrontCollisionAvoidance(leftDistance, rightDistance);
         GyroSensor gyro = new GyroSensor(imu, new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.FORWARD, RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
@@ -55,7 +59,8 @@ public class MainOp extends LinearOpMode implements Sleeper{
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
+        wrist.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         waitForStart();
         intake.setDirection(Servo.Direction.FORWARD);
         intake.getController().pwmEnable();
@@ -65,13 +70,15 @@ public class MainOp extends LinearOpMode implements Sleeper{
             telemetry.addData("Intake", collector.getPercentage());
             telemetry.addData("gripper",gripper.getState()?"open":"closed");
             telemetry.addData("gripper value", grab.getPosition());
-            telemetry.addData("left Trim", t.getLeftTrim());
-            telemetry.addData("right Trim", t.getRightTrim());
             telemetry.addData("left distance", distance.getLeftValue());
             telemetry.addData("right distance", distance.getRightValue());
             telemetry.addData("Yaw, Pitch, And Roll", "%.2f, %.2f, %.2f", gyro.getYaw(),gyro.getPitch(), gyro.getRoll());
             telemetry.addData("Left Back Touch Sensor", touchSensors.getLeft()? "pressed":"not pressed");
             telemetry.addData("Right Back Touch Sensor", touchSensors.getRight()? "pressed":"not pressed");
+            telemetry.addData("Gamepad B left stick position", gamepad2.left_stick_y);
+            telemetry.addData("Gamepad B right stick position", gamepad2.right_stick_y);
+            telemetry.addData("Wrist Motor position", wrist.getCurrentPosition());
+            telemetry.addData("Arm Motor position", arm.getCurrentPosition());
             telemetry.update();
 
             t.update(gamepad1);

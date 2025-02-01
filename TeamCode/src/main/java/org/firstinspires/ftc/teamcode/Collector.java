@@ -31,6 +31,20 @@ public class Collector {
         this.l =l;
     }
 
+    public void AutoTakeIn() {
+        if ((intakeServo.getPosition()%1) < max){
+            intakeServo.setPosition(max);
+            l.sleepFor(25);
+        }
+    }
+
+    public void AutoDropOff() {
+        if ((intakeServo.getPosition()%1) > min){
+            intakeServo.setPosition(min);
+            l.sleepFor(25);
+        }
+    }
+
     /**
      * Makes the intakeServo rotate inwards as long as it is not going to reach max value
      */

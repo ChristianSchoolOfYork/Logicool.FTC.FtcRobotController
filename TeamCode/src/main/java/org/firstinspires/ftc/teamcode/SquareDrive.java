@@ -17,6 +17,7 @@ public class SquareDrive extends LinearOpMode implements Sleeper {
         IMU imu = hardwareMap.get(IMU.class, "imu");
         final float LEFTTRIMCONSTANT = 0.96f;
         final float RIGHTTRIMCONSTANT = 1;
+        double currentZeroGyro;
 
         Trim t = new Trim();
         t.setLeft(LEFTTRIMCONSTANT);
@@ -32,7 +33,9 @@ public class SquareDrive extends LinearOpMode implements Sleeper {
         sleepFor(2000);
         drive.stop();
         drive.setPower(t.getPowerLevel(0.25f,-0.25f));
-        while (!(gyro.getYaw() < -90)){
+
+        currentZeroGyro = gyro.getYaw();
+        while (!(gyro.getYaw() < currentZeroGyro-90)){
             this.idle();
             telemetry.addData("Yaw",gyro.getYaw());
             telemetry.update();
