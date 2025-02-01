@@ -1,15 +1,19 @@
 package org.firstinspires.ftc.teamcode.states;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.ArmWrist;
 import org.firstinspires.ftc.teamcode.Collector;
+import org.firstinspires.ftc.teamcode.Gripper;
 
 public class PickUpSample extends AutoModeState {
 
-    private final Collector collector;
+    private final ArmWrist armWrist;
+    private final Gripper gripper;
 
-    public PickUpSample(Collector collector, Telemetry telemetry) {
+    public PickUpSample(Gripper gripper, ArmWrist armWrist, Telemetry telemetry) {
         super(telemetry);
-        this.collector = collector;
+        this.armWrist = armWrist;
+        this.gripper = gripper;
     }
 
     @Override
@@ -19,6 +23,7 @@ public class PickUpSample extends AutoModeState {
 
     @Override
     protected void InternalExecute() {
-        collector.AutoTakeIn();
+        armWrist.SetPosition(0,0);
+        gripper.close();
     }
 }

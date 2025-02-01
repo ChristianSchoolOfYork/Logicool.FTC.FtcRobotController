@@ -40,6 +40,7 @@ public class MainOp extends LinearOpMode implements Sleeper{
         IMU imu = hardwareMap.get(IMU.class, "imu");
         RevTouchSensor leftBack = hardwareMap.get(RevTouchSensor.class, "back left touch");
         RevTouchSensor rightBack = hardwareMap.get(RevTouchSensor.class, "back right touch");
+        GyroSensor gyro = new GyroSensor(imu, new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.FORWARD, RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
 
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -49,11 +50,10 @@ public class MainOp extends LinearOpMode implements Sleeper{
 
         Gripper gripper = new Gripper(grab,0.1,0.3);
         Collector collector = new Collector(this, intake, 0.94, 0.06);
-        MainDrive drive = new MainDrive(gamepad1,leftMotor,rightMotor, telemetry);
+        MainDrive drive = new MainDrive(gamepad1,leftMotor,rightMotor, gyro, telemetry);
         ArmWrist armWrist = new ArmWrist(arm, wrist, telemetry);
         Trim t = new Trim();
         FrontCollisionAvoidance distance = new FrontCollisionAvoidance(leftDistance, rightDistance);
-        GyroSensor gyro = new GyroSensor(imu, new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.FORWARD, RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
         PowerLevels pl;
         TouchSensors touchSensors = new TouchSensors(leftBack, rightBack);
 

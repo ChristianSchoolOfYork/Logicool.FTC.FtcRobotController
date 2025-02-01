@@ -4,14 +4,17 @@ import android.renderscript.ScriptIntrinsicYuvToRGB;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ArmWrist;
+import org.firstinspires.ftc.teamcode.Gripper;
 
 public class InitialState extends AutoModeState {
 
     private final ArmWrist armWrist;
+    private final Gripper gripper;
 
-    public InitialState(ArmWrist armWrist, Telemetry telemetry) {
+    public InitialState(ArmWrist armWrist, Gripper gripper, Telemetry telemetry) {
         super(telemetry);
         this.armWrist = armWrist;
+        this.gripper = gripper;
     }
 
     public String GetStateName()
@@ -21,7 +24,7 @@ public class InitialState extends AutoModeState {
 
     @Override
     protected void InternalExecute() {
-        armWrist.SetPosition(260, -330
-        );
+        armWrist.SetPosition(0, -665 );
+        gripper.open();
     }
 }

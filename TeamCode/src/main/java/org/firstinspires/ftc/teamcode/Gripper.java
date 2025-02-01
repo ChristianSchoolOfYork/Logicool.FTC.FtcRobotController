@@ -23,8 +23,7 @@ public class Gripper {
         this.gripperServo = gripperServo;
         this.max = max;
         this.min = min;
-        this.gripperServo.setPosition(min);
-        this.isGripperOpen = true;
+        isGripperOpen = true;
         close();
     }
 
@@ -34,7 +33,7 @@ public class Gripper {
     public void open(){
         if (!isGripperOpen && !isMoving){
             isMoving = true;
-            gripperServo.setPosition(max);
+            gripperServo.setPosition(min);
             isGripperOpen = true;
             isMoving = false;
         }
@@ -45,7 +44,7 @@ public class Gripper {
     public void close(){
         if (isGripperOpen && ! isMoving){
             isMoving = true;
-            gripperServo.setPosition(min);
+            gripperServo.setPosition(max);
             isGripperOpen = false;
             isMoving = false;
         }

@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.states;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.ArmWrist;
 import org.firstinspires.ftc.teamcode.MainDrive;
 
-public class MoveToSample extends AutoModeState {
+public class MoveHome extends AutoModeState {
     private final MainDrive mainDrive;
 
-    public MoveToSample(MainDrive mainDrive, Telemetry telemetry) {
+    public MoveHome(MainDrive mainDrive, Telemetry telemetry) {
         super(telemetry);
 
         this.mainDrive = mainDrive;
@@ -19,6 +18,8 @@ public class MoveToSample extends AutoModeState {
 
     @Override
     protected void InternalExecute() {
-        mainDrive.MoveForward(25.0f);
+        mainDrive.MoveForward(-15.0f);
+        mainDrive.RotateLeftTo(180);
+        mainDrive.MoveForward(10.0f);
     }
 }

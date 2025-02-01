@@ -12,13 +12,15 @@ public class MainDrive {
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     private final Telemetry telemetry;
+    private final GyroSensor gyro;
 
     Gamepad gamepad1;
     DcMotor left, right;
-    public MainDrive(Gamepad gamepad1, DcMotor left, DcMotor right, Telemetry telemetry){
+    public MainDrive(Gamepad gamepad1, DcMotor left, DcMotor right, GyroSensor gyro, Telemetry telemetry){
         this.gamepad1 = gamepad1;
         this.left = left;
         this.right = right;
+        this.gyro = gyro;
         this.telemetry = telemetry;
     }
     public void update(PowerLevels pl){
@@ -26,8 +28,8 @@ public class MainDrive {
         right.setPower(-gamepad1.right_stick_y * pl.getRightPower());
     }
 
-    public void MoveForward(float distantToMove) {
-        encoderDrive(.5, distantToMove, distantToMove);
+    public void MoveForward(float distanceToMove) {
+        encoderDrive(.5, distanceToMove, distanceToMove);
     }
 
     private void encoderDrive(double speed,
@@ -48,8 +50,8 @@ public class MainDrive {
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        left.setPower(Math.abs(speed));
-        right.setPower(Math.abs(speed));
+        left.setPower(speed);
+        right.setPower(speed);
 
         // keep looping while we are still active, and there is time left, and both motors are running.
         // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -73,5 +75,21 @@ public class MainDrive {
         // Turn off RUN_TO_POSITION
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void RotateLeftTo(double degrees) {
+        double currentZeroGyro = gyro.getYaw();
+       
+        left.setPower(.5);
+        right.setPower(-.5);
+
+        while (gyro.getYaw() > degrees){
+            telemetry.addData("Target Yaw", degrees);
+            telemetry.addData("Current Yaw",gyro.getYaw());
+            telemetry.update();
+        }
+
+        left.setPower(0);
+        right.setPower(0);
     }
 }
