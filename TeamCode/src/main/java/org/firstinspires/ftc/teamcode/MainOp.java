@@ -50,7 +50,7 @@ public class MainOp extends LinearOpMode implements Sleeper{
 
         Gripper gripper = new Gripper(grab,0.1,0.3);
         Collector collector = new Collector(this, intake, 0.94, 0.06);
-        MainDrive drive = new MainDrive(gamepad1,leftMotor,rightMotor, gyro, telemetry);
+        MainDrive drive = new MainDrive(gamepad1,leftMotor,rightMotor, gyro, this, telemetry);
         ArmWrist armWrist = new ArmWrist(arm, wrist, telemetry);
         Trim t = new Trim();
         FrontCollisionAvoidance distance = new FrontCollisionAvoidance(leftDistance, rightDistance);
@@ -96,4 +96,8 @@ public class MainOp extends LinearOpMode implements Sleeper{
         this.idle();
     }
 
+    @Override
+    public void Idle() {
+        this.idle();
+    }
 }

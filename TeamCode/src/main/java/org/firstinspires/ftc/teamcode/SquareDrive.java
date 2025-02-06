@@ -32,10 +32,11 @@ public class SquareDrive extends LinearOpMode implements Sleeper {
         drive.setPower(t.getPowerLevel(0.5f,0.5f));
         sleepFor(2000);
         drive.stop();
-        drive.setPower(t.getPowerLevel(0.25f,-0.25f));
+        drive.setPower(t.getPowerLevel(0.25f, -0.25f));
 
         currentZeroGyro = gyro.getYaw();
-        while (!(gyro.getYaw() < currentZeroGyro-90)){
+
+        while ((gyro.getYaw() > currentZeroGyro-90)){
             this.idle();
             telemetry.addData("Yaw",gyro.getYaw());
             telemetry.update();
@@ -48,6 +49,11 @@ public class SquareDrive extends LinearOpMode implements Sleeper {
     @Override
     public void sleepFor(long milliseconds) {
         this.sleep(milliseconds);
+        this.idle();
+    }
+
+    @Override
+    public void Idle() {
         this.idle();
     }
 }

@@ -13,14 +13,16 @@ public class MainDrive {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     private final Telemetry telemetry;
     private final GyroSensor gyro;
+    private final Sleeper sleeper;
 
     Gamepad gamepad1;
     DcMotor left, right;
-    public MainDrive(Gamepad gamepad1, DcMotor left, DcMotor right, GyroSensor gyro, Telemetry telemetry){
+    public MainDrive(Gamepad gamepad1, DcMotor left, DcMotor right, GyroSensor gyro, Sleeper sleeper, Telemetry telemetry){
         this.gamepad1 = gamepad1;
         this.left = left;
         this.right = right;
         this.gyro = gyro;
+        this.sleeper = sleeper;
         this.telemetry = telemetry;
     }
     public void update(PowerLevels pl){
@@ -32,6 +34,38 @@ public class MainDrive {
         encoderDrive(.5, distanceToMove, distanceToMove);
     }
 
+    public void RotateLeftTo(double degrees) {
+
+        double startingYaw = gyro.getYaw();
+        double target = degrees - startingYaw;
+        double degreesTraveled = 0;
+
+        left.setPower(.25);
+        right.setPower(.25);
+
+        
+        while (degreesTraveled < target){
+            degreesTraveled = getNormalizedYaw() - startingYaw;
+            telemetry.addData("Target Degrees Traveled", target);
+            telemetry.addData("Degrees Traveled", degreesTraveled);
+            telemetry.addData("Target Yaw", degrees);
+            telemetry.addData("Current Yaw",gyro.getYaw());
+            telemetry.update();
+            sleeper.Idle();
+        }
+
+        left.setPower(0);
+        right.setPower(0);
+    }
+    private double getNormalizedYaw(){
+        double currentYaw = gyro.getYaw();
+
+        if (currentYaw < 0){
+            currentYaw += 360;
+        }
+
+        return currentYaw;
+    }
     private void encoderDrive(double speed,
                              double leftInches, double rightInches) {
         int newLeftTarget;
@@ -77,19 +111,5 @@ public class MainDrive {
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void RotateLeftTo(double degrees) {
-        double currentZeroGyro = gyro.getYaw();
-       
-        left.setPower(.5);
-        right.setPower(-.5);
 
-        while (gyro.getYaw() > degrees){
-            telemetry.addData("Target Yaw", degrees);
-            telemetry.addData("Current Yaw",gyro.getYaw());
-            telemetry.update();
-        }
-
-        left.setPower(0);
-        right.setPower(0);
-    }
 }

@@ -58,4 +58,9 @@ public class LengthCheck extends LinearOpMode implements Sleeper{
         sleep(milliseconds);
         idle();
     }
+
+    @Override
+    public void Idle() {
+        idle();
+    }
 }

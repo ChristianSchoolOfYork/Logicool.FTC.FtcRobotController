@@ -5,6 +5,14 @@ import com.qualcomm.robotcore.hardware.IMU;
 @SuppressWarnings("unused")
 public class GyroSensor {
     private final IMU imu;
+    AutoDrive drive;
+    public GyroSensor(IMU imu, RevHubOrientationOnRobot orientation, AutoDrive drive){
+        this.imu = imu;
+        this.imu.initialize(new IMU.Parameters(orientation));
+        imu.resetYaw();
+        this.drive = drive;
+    }
+
     public GyroSensor(IMU imu, RevHubOrientationOnRobot orientation){
         this.imu = imu;
         this.imu.initialize(new IMU.Parameters(orientation));
@@ -26,4 +34,5 @@ public class GyroSensor {
     public void resetYaw(){
         imu.resetYaw();
     }
+
 }

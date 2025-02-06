@@ -34,7 +34,7 @@ public class AutoOp extends LinearOpMode implements Sleeper {
         GyroSensor gyro = new GyroSensor(imu, new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.FORWARD, RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
 
         ArmWrist armWrist = new ArmWrist(armMotor, wristMotor, telemetry);
-        MainDrive maindrive = new MainDrive(gamepad1, leftMotor, rightMotor, gyro, telemetry);
+        MainDrive maindrive = new MainDrive(gamepad1, leftMotor, rightMotor, gyro, this, telemetry);
         Collector collector = new Collector(this, intake, 0.94, 0.06);
         Gripper gripper =  new Gripper(gripperServo,0.1,0.3);
 
@@ -82,6 +82,11 @@ public class AutoOp extends LinearOpMode implements Sleeper {
     @Override
     public void sleepFor(long milliseconds) {
         this.sleep(milliseconds);
+        this.idle();
+    }
+
+    @Override
+    public void Idle() {
         this.idle();
     }
 }

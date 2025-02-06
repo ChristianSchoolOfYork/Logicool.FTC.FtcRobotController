@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
+@SuppressWarnings("unused")
 public class ArmWrist {
     private final DcMotor arm;
     private final DcMotor wrist;
@@ -15,6 +15,7 @@ public class ArmWrist {
         this.wrist = wrist;
         this.telemetry = telemetry;
     }
+
 
     public void SetPosition(int wristPosition, int armPosition) {
 
