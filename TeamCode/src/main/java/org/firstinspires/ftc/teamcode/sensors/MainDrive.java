@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.sensors;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Sleeper;
 
 public class MainDrive {
     static final double COUNTS_PER_MOTOR_REV = 560;     // factor of 288
@@ -30,7 +31,7 @@ public class MainDrive {
         right.setPower(-gamepad1.right_stick_y * pl.getRightPower());
     }
 
-    public void MoveForward(float distanceToMove) {
+    public void MoveForward(double distanceToMove) {
         encoderDrive(.5, distanceToMove, distanceToMove);
     }
 
@@ -43,7 +44,6 @@ public class MainDrive {
         left.setPower(.25);
         right.setPower(.25);
 
-        
         while (degreesTraveled < target){
             degreesTraveled = getNormalizedYaw() - startingYaw;
             telemetry.addData("Target Degrees Traveled", target);

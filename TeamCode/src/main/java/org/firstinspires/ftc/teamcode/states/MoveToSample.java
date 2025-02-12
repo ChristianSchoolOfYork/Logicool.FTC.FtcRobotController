@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.states;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.ArmWrist;
-import org.firstinspires.ftc.teamcode.MainDrive;
+import org.firstinspires.ftc.teamcode.sensors.MainDrive;
 
 public class MoveToSample extends AutoModeState {
     private final MainDrive mainDrive;

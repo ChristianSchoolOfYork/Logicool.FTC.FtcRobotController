@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.states;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.ArmWrist;
+import org.firstinspires.ftc.teamcode.sensors.ArmWrist;
 
 public class FinalState extends AutoModeState
 {

@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.states;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.ArmWrist;
-import org.firstinspires.ftc.teamcode.Collector;
-import org.firstinspires.ftc.teamcode.Gripper;
+import org.firstinspires.ftc.teamcode.sensors.ArmWrist;
+import org.firstinspires.ftc.teamcode.sensors.Gripper;
 
 public class PickUpSample extends AutoModeState {
 

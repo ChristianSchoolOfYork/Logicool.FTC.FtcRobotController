@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.sensors.PowerLevels;
+
 @SuppressWarnings("unused")
 public class AutoDrive {
     public final DcMotor left,right;

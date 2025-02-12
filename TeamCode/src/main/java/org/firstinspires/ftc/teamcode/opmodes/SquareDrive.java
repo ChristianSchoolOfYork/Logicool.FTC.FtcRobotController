@@ -1,13 +1,21 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.teamcode.AutoDrive;
+import org.firstinspires.ftc.teamcode.sensors.GyroSensor;
+import org.firstinspires.ftc.teamcode.sensors.PowerLevels;
+import org.firstinspires.ftc.teamcode.Sleeper;
+import org.firstinspires.ftc.teamcode.sensors.Trim;
+
 @SuppressWarnings("unused")
 @Autonomous
+@Disabled
 public class SquareDrive extends LinearOpMode implements Sleeper {
 
     @Override

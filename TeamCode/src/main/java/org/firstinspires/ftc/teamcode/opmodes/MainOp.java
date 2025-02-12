@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode;
-
-import android.annotation.SuppressLint;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.rev.RevTouchSensor;
@@ -10,7 +8,17 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-import java.util.Locale;
+
+import org.firstinspires.ftc.teamcode.sensors.ArmWrist;
+import org.firstinspires.ftc.teamcode.sensors.Collector;
+import org.firstinspires.ftc.teamcode.sensors.DistanceCheck;
+import org.firstinspires.ftc.teamcode.sensors.Gripper;
+import org.firstinspires.ftc.teamcode.sensors.GyroSensor;
+import org.firstinspires.ftc.teamcode.sensors.MainDrive;
+import org.firstinspires.ftc.teamcode.sensors.PowerLevels;
+import org.firstinspires.ftc.teamcode.Sleeper;
+import org.firstinspires.ftc.teamcode.sensors.TouchSensors;
+import org.firstinspires.ftc.teamcode.sensors.Trim;
 
 /*
 Controller 1
@@ -24,7 +32,7 @@ Controller 2
  */
 @SuppressWarnings({"unused"})
 @TeleOp
-public class MainOp extends LinearOpMode implements Sleeper{
+public class MainOp extends LinearOpMode implements Sleeper {
 
 
     @Override
@@ -53,7 +61,7 @@ public class MainOp extends LinearOpMode implements Sleeper{
         MainDrive drive = new MainDrive(gamepad1,leftMotor,rightMotor, gyro, this, telemetry);
         ArmWrist armWrist = new ArmWrist(arm, wrist, telemetry);
         Trim t = new Trim();
-        FrontCollisionAvoidance distance = new FrontCollisionAvoidance(leftDistance, rightDistance);
+        DistanceCheck distance = new DistanceCheck(leftDistance, rightDistance);
         PowerLevels pl;
         TouchSensors touchSensors = new TouchSensors(leftBack, rightBack);
 

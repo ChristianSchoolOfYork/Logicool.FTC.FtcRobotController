@@ -1,12 +1,16 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.sensors.Collector;
+import org.firstinspires.ftc.teamcode.sensors.Gripper;
+import org.firstinspires.ftc.teamcode.Sleeper;
+
 @TeleOp
-public class LengthCheck extends LinearOpMode implements Sleeper{
+public class LengthCheck extends LinearOpMode implements Sleeper {
     @Override
     public void runOpMode() throws InterruptedException {
         DcMotor arm = hardwareMap.get(DcMotor.class, "Arm");

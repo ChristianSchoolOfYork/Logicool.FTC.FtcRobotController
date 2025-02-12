@@ -1,10 +1,13 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.sensors.Gripper;
+
 @TeleOp
-public class gripperTest extends LinearOpMode{
+public class GripperTest extends LinearOpMode{
 
     @Override
     public void runOpMode(){

@@ -1,25 +1,31 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.states.AutoModeState;
+import org.firstinspires.ftc.teamcode.sensors.ArmWrist;
+import org.firstinspires.ftc.teamcode.sensors.Collector;
+import org.firstinspires.ftc.teamcode.sensors.DistanceCheck;
+import org.firstinspires.ftc.teamcode.sensors.Gripper;
+import org.firstinspires.ftc.teamcode.sensors.GyroSensor;
+import org.firstinspires.ftc.teamcode.sensors.MainDrive;
+import org.firstinspires.ftc.teamcode.Sleeper;
 import org.firstinspires.ftc.teamcode.states.FinalState;
 import org.firstinspires.ftc.teamcode.states.InitialState;
 import org.firstinspires.ftc.teamcode.states.MoveHome;
 import org.firstinspires.ftc.teamcode.states.MoveToSample;
 import org.firstinspires.ftc.teamcode.states.PickUpSample;
+import org.firstinspires.ftc.teamcode.states.PickUpSpecimen;
 
 /** @noinspection ALL*/
 @SuppressWarnings("unused")
 @Autonomous
 public class AutoOp extends LinearOpMode implements Sleeper {
-
-
 
     @Override
     public void runOpMode() {
@@ -29,20 +35,24 @@ public class AutoOp extends LinearOpMode implements Sleeper {
         DcMotor rightMotor = hardwareMap.get(DcMotor.class, "Right");
         Servo intake = hardwareMap.get(Servo.class, "Intake");
         Servo gripperServo = hardwareMap.get(Servo.class, "Gripper");
+        DistanceSensor distanceLeft = hardwareMap.get(DistanceSensor.class, "left-range-sensor");
+        DistanceSensor distanceRight = hardwareMap.get(DistanceSensor.class, "right-range-sensor");
 
         IMU imu = hardwareMap.get(IMU.class, "imu");
         GyroSensor gyro = new GyroSensor(imu, new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.FORWARD, RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
 
         ArmWrist armWrist = new ArmWrist(armMotor, wristMotor, telemetry);
-        MainDrive maindrive = new MainDrive(gamepad1, leftMotor, rightMotor, gyro, this, telemetry);
+        MainDrive mainDrive = new MainDrive(gamepad1, leftMotor, rightMotor, gyro, this, telemetry);
         Collector collector = new Collector(this, intake, 0.94, 0.06);
         Gripper gripper =  new Gripper(gripperServo,0.1,0.3);
+        DistanceCheck distanceCheck = new DistanceCheck(distanceLeft, distanceRight);
 
         InitialState initialState = new InitialState(armWrist, gripper, telemetry);
-        MoveToSample moveToSample = new MoveToSample(maindrive, telemetry);
+        MoveToSample moveToSample = new MoveToSample(mainDrive, telemetry);
         FinalState finalState = new FinalState(armWrist, telemetry);
         PickUpSample pickUpSample = new PickUpSample(gripper, armWrist, telemetry);
-        MoveHome moveHome = new MoveHome(maindrive, telemetry);
+        MoveHome moveHome = new MoveHome(mainDrive, telemetry);
+        PickUpSpecimen pickUpSpecimen = new PickUpSpecimen(gripper, armWrist, mainDrive, distanceCheck, telemetry);
 
         wristMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -51,7 +61,7 @@ public class AutoOp extends LinearOpMode implements Sleeper {
         wristMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        gyro.resetYaw();
+        gripper.close();
 
         telemetry.addData("Current arm position", armMotor.getCurrentPosition());
         telemetry.addData("Current wrist position", wristMotor.getCurrentPosition());
@@ -60,13 +70,14 @@ public class AutoOp extends LinearOpMode implements Sleeper {
         telemetry.update();
 
         waitForStart();
-
+        gyro.resetYaw();
         if (opModeIsActive()) {
             initialState.Execute();
             moveToSample.Execute();
             pickUpSample.Execute();
             moveHome.Execute();
-            finalState.Execute();
+            pickUpSpecimen.Execute();
+            //finalState.Execute();
         }
 
         telemetry.addData("Yaw Orientation", gyro.getYaw());
