@@ -35,33 +35,82 @@ public class MainDrive {
         encoderDrive(.5, distanceToMove, distanceToMove);
     }
 
-    public void RotateLeftTo(double degrees) {
+    public RotationData RotateRightTo(double degrees) {
 
-        double startingYaw = gyro.getYaw();
-        double target = degrees - startingYaw;
-        double degreesTraveled = 0;
+        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        double currentYaw = gyro.getYaw();
+        double initialDegreesToTarget = ((currentYaw + 360) % 360) - degrees;
+        double degreesToTarget = initialDegreesToTarget;
+
+        left.setPower(-.25);
+        right.setPower(-.25);
+
+        while (degreesToTarget >= 0) {
+            currentYaw = gyro.getYaw();
+            degreesToTarget = ((currentYaw + 360) % 360) - degrees;
+
+            if(degreesToTarget > initialDegreesToTarget)
+            {
+                degreesToTarget = degrees - (currentYaw + 360);
+            }
+
+            telemetry.addData("Current Yaw", currentYaw);
+            telemetry.addData("Degreees to target", degreesToTarget);
+            telemetry.addData("Target Degrees", degrees);
+            telemetry.update();
+            sleeper.Idle();
+        }
+        RotationData rotationData = new RotationData(degreesToTarget, degrees, gyro.getYaw());
+
+        left.setPower(0);
+        right.setPower(0);
+
+        return rotationData;
+    }
+
+    public RotationData RotateLeftTo(double degrees) {
+
+        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        double currentYaw = gyro.getYaw();
+        double initialDegreesToTarget = degrees - currentYaw;
+        double degreesToTarget = initialDegreesToTarget;
 
         left.setPower(.25);
         right.setPower(.25);
 
-        while (degreesTraveled < target){
-            degreesTraveled = getNormalizedYaw() - startingYaw;
-            telemetry.addData("Target Degrees Traveled", target);
-            telemetry.addData("Degrees Traveled", degreesTraveled);
-            telemetry.addData("Target Yaw", degrees);
-            telemetry.addData("Current Yaw",gyro.getYaw());
+        while (degreesToTarget >= 0) {
+            currentYaw = gyro.getYaw();
+            degreesToTarget = degrees - currentYaw;
+
+            if(degreesToTarget > initialDegreesToTarget)
+            {
+                degreesToTarget = degrees - (currentYaw + 360);
+            }
+
+            // degreesTraveled = getNormalizedYaw() - startingYaw;
+            telemetry.addData("Current Yaw", currentYaw);
+            telemetry.addData("Degreees to target", degreesToTarget);
+            telemetry.addData("Target Degrees", degrees);
             telemetry.update();
             sleeper.Idle();
         }
+        RotationData rotationData = new RotationData(degreesToTarget, degrees, gyro.getYaw());
 
         left.setPower(0);
         right.setPower(0);
+
+        return rotationData;
     }
+
     private double getNormalizedYaw(){
         double currentYaw = gyro.getYaw();
 
         if (currentYaw < 0){
-            currentYaw += 360;
+            currentYaw = Math.abs(currentYaw);
         }
 
         return currentYaw;
@@ -109,7 +158,6 @@ public class MainDrive {
         // Turn off RUN_TO_POSITION
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-
+    }    
 }
+

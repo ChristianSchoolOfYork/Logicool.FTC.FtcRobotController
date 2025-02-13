@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.sensors.ArmWrist;
 import org.firstinspires.ftc.teamcode.sensors.Collector;
 import org.firstinspires.ftc.teamcode.sensors.DistanceCheck;
@@ -19,6 +21,7 @@ import org.firstinspires.ftc.teamcode.states.FinalState;
 import org.firstinspires.ftc.teamcode.states.InitialState;
 import org.firstinspires.ftc.teamcode.states.MoveHome;
 import org.firstinspires.ftc.teamcode.states.MoveToSample;
+import org.firstinspires.ftc.teamcode.states.MoveToSubmersible;
 import org.firstinspires.ftc.teamcode.states.PickUpSample;
 import org.firstinspires.ftc.teamcode.states.PickUpSpecimen;
 
@@ -52,7 +55,8 @@ public class AutoOp extends LinearOpMode implements Sleeper {
         FinalState finalState = new FinalState(armWrist, telemetry);
         PickUpSample pickUpSample = new PickUpSample(gripper, armWrist, telemetry);
         MoveHome moveHome = new MoveHome(mainDrive, telemetry);
-        PickUpSpecimen pickUpSpecimen = new PickUpSpecimen(gripper, armWrist, mainDrive, distanceCheck, telemetry);
+        PickUpSpecimen pickUpSpecimen = new PickUpSpecimen(gripper, armWrist, mainDrive, distanceCheck, this ,telemetry);
+        MoveToSubmersible moveToSubmersible = new MoveToSubmersible(gripper, armWrist, mainDrive, telemetry);
 
         wristMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -77,6 +81,9 @@ public class AutoOp extends LinearOpMode implements Sleeper {
             pickUpSample.Execute();
             moveHome.Execute();
             pickUpSpecimen.Execute();
+            moveToSubmersible.Execute();
+
+
             //finalState.Execute();
         }
 
@@ -85,7 +92,9 @@ public class AutoOp extends LinearOpMode implements Sleeper {
 
         while(opModeIsActive())
         {
+            moveHome.GetRotationData().UpdateTelemetry(telemetry);
             telemetry.addData("Yaw Orientation", gyro.getYaw());
+            telemetry.addData("Distance From Wall", distanceLeft.getDistance(DistanceUnit.INCH));
             telemetry.update();
         }
     }
