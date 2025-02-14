@@ -26,7 +26,7 @@ public class MoveToSubmersible extends AutoModeState {
     @Override
     protected void InternalExecute() {
         drive.RotateRightTo(90);
-        //drive.MoveForward(48);
-        //drive.RotateRightTo(0);
+        drive.MoveForward(60);
+        drive.RotateRightTo(0);
     }
 }

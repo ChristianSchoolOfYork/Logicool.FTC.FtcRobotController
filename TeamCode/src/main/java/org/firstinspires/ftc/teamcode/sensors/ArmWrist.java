@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.sensors;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 @SuppressWarnings("unused")
@@ -9,6 +10,7 @@ public class ArmWrist {
     private final DcMotor arm;
     private final DcMotor wrist;
     private final Telemetry telemetry;
+    private ElapsedTime runtime = new ElapsedTime();
 
     public ArmWrist(DcMotor arm, DcMotor wrist, Telemetry telemetry){
         this.arm = arm;
@@ -33,8 +35,9 @@ public class ArmWrist {
 
         wrist.setPower(wristPower);
         arm.setPower(armPower);
+        runtime.reset();
 
-        while(wrist.isBusy() || arm.isBusy()) {
+        while((wrist.isBusy() || arm.isBusy()) && runtime.seconds() < 5.0) {
             telemetry.addData("Running wrist to", wristPosition);
             telemetry.addData("Wrist Currently at", wrist.getCurrentPosition());
             telemetry.addData("Running arm to", armPosition);

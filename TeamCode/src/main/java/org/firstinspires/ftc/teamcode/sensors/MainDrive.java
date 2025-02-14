@@ -2,9 +2,12 @@ package org.firstinspires.ftc.teamcode.sensors;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Sleeper;
+
+import java.util.Objects;
 
 public class MainDrive {
     static final double COUNTS_PER_MOTOR_REV = 560;     // factor of 288
@@ -15,6 +18,7 @@ public class MainDrive {
     private final Telemetry telemetry;
     private final GyroSensor gyro;
     private final Sleeper sleeper;
+    private ElapsedTime runtime = new ElapsedTime();
 
     Gamepad gamepad1;
     DcMotor left, right;
@@ -142,7 +146,9 @@ public class MainDrive {
         // always end the motion as soon as possible.
         // However, if you require that BOTH motors have finished their moves before the robot continues
         // onto the next step, use (isBusy() || isBusy()) in the loop test.
-        while (left.isBusy() && right.isBusy()) {
+        runtime.reset();
+
+        while ((left.isBusy() && right.isBusy()) && runtime.seconds() < 10) {
 
             // Display it for the driver.
             telemetry.addData("Running to", " %7d :%7d", newLeftTarget, newRightTarget);

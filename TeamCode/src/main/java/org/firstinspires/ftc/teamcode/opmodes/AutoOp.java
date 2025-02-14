@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.sensors.MainDrive;
 import org.firstinspires.ftc.teamcode.Sleeper;
 import org.firstinspires.ftc.teamcode.states.FinalState;
 import org.firstinspires.ftc.teamcode.states.InitialState;
+import org.firstinspires.ftc.teamcode.states.InitialStateLiftSpecimen;
 import org.firstinspires.ftc.teamcode.states.MoveHome;
 import org.firstinspires.ftc.teamcode.states.MoveToSample;
 import org.firstinspires.ftc.teamcode.states.MoveToSubmersible;
@@ -57,6 +58,7 @@ public class AutoOp extends LinearOpMode implements Sleeper {
         MoveHome moveHome = new MoveHome(mainDrive, telemetry);
         PickUpSpecimen pickUpSpecimen = new PickUpSpecimen(gripper, armWrist, mainDrive, distanceCheck, this ,telemetry);
         MoveToSubmersible moveToSubmersible = new MoveToSubmersible(gripper, armWrist, mainDrive, telemetry);
+        InitialStateLiftSpecimen initialStateLiftSpecimen = new InitialStateLiftSpecimen(gripper, armWrist, mainDrive,distanceCheck, this, telemetry);
 
         wristMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -76,13 +78,13 @@ public class AutoOp extends LinearOpMode implements Sleeper {
         waitForStart();
         gyro.resetYaw();
         if (opModeIsActive()) {
-            initialState.Execute();
-            moveToSample.Execute();
-            pickUpSample.Execute();
-            moveHome.Execute();
-            pickUpSpecimen.Execute();
-            moveToSubmersible.Execute();
-
+//            initialState.Execute();
+//            moveToSample.Execute();
+//            pickUpSample.Execute();
+//            moveHome.Execute();
+//            pickUpSpecimen.Execute();
+//            moveToSubmersible.Execute();
+              initialStateLiftSpecimen.Execute();
 
             //finalState.Execute();
         }
@@ -90,13 +92,13 @@ public class AutoOp extends LinearOpMode implements Sleeper {
         telemetry.addData("Yaw Orientation", gyro.getYaw());
         telemetry.update();
 
-        while(opModeIsActive())
-        {
-            moveHome.GetRotationData().UpdateTelemetry(telemetry);
-            telemetry.addData("Yaw Orientation", gyro.getYaw());
-            telemetry.addData("Distance From Wall", distanceLeft.getDistance(DistanceUnit.INCH));
-            telemetry.update();
-        }
+//        while(opModeIsActive())
+//        {
+//            moveHome.GetRotationData().UpdateTelemetry(telemetry);
+//            telemetry.addData("Yaw Orientation", gyro.getYaw());
+//            telemetry.addData("Distance From Wall", distanceLeft.getDistance(DistanceUnit.INCH));
+//            telemetry.update();
+//        }
     }
 
     @Override
