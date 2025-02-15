@@ -52,6 +52,10 @@ public class MainOp extends LinearOpMode implements Sleeper {
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        boolean holdArm = false;
+        boolean pressed = false;
+
+
         wrist.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -94,6 +98,17 @@ public class MainOp extends LinearOpMode implements Sleeper {
             collector.update(gamepad2);
             gripper.update(gamepad2);
 
+            if (gamepad2.y && !holdArm && !pressed){
+                holdArm = true;
+                pressed = true;
+            } else if(!gamepad2.y && pressed){
+                pressed = false;
+            }  else if (gamepad2.y && holdArm && !pressed){
+                holdArm = false;
+                pressed = true;
+            }
+
+            
         }
     }
 
