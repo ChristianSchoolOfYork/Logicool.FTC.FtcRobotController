@@ -44,24 +44,24 @@ public class MainOp extends LinearOpMode implements Sleeper {
         Servo grab = hardwareMap.get(Servo.class, "Gripper");
         DistanceSensor leftDistance = hardwareMap.get(DistanceSensor.class, "left-range-sensor");
         DistanceSensor rightDistance = hardwareMap.get(DistanceSensor.class, "right-range-sensor");
-       // IMU imu = hardwareMap.get(IMU.class, "imu");
+        // IMU imu = hardwareMap.get(IMU.class, "imu");
         RevTouchSensor leftBack = hardwareMap.get(RevTouchSensor.class, "back left touch");
         RevTouchSensor rightBack = hardwareMap.get(RevTouchSensor.class, "back right touch");
-       // GyroSensor gyro = new GyroSensor(imu, new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.FORWARD, RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
+        // GyroSensor gyro = new GyroSensor(imu, new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.FORWARD, RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
 
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         boolean holdArm = false;
         boolean pressed = false;
-
+        double holdValue = 0.0;
 
         wrist.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         wrist.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        Gripper gripper = new Gripper(grab,0.1,0.3);
+        Gripper gripper = new Gripper(grab, 0.1, 0.3);
         Collector collector = new Collector(this, intake, 0.94, 0.06);
-        MainDrive drive = new MainDrive(gamepad1,leftMotor,rightMotor, null, this, telemetry);
+        MainDrive drive = new MainDrive(gamepad1, leftMotor, rightMotor, null, this, telemetry);
         ArmWrist armWrist = new ArmWrist(arm, wrist, telemetry);
         Trim t = new Trim();
         DistanceCheck distance = new DistanceCheck(leftDistance, rightDistance);
@@ -76,39 +76,49 @@ public class MainOp extends LinearOpMode implements Sleeper {
         intake.setDirection(Servo.Direction.FORWARD);
         intake.getController().pwmEnable();
         while (opModeIsActive()) {
-            pl=t.getPowerLevel(1,1);
-            telemetry.addData("Status", "Running");
-            telemetry.addData("Intake", collector.getPercentage());
-            telemetry.addData("gripper",gripper.getState()?"open":"closed");
-            telemetry.addData("gripper value", grab.getPosition());
-            telemetry.addData("left distance", distance.getLeftValue());
-            telemetry.addData("right distance", distance.getRightValue());
-            //telemetry.addData("Yaw, Pitch, And Roll", "%.2f, %.2f, %.2f", gyro.getYaw(),gyro.getPitch(), gyro.getRoll());
-            telemetry.addData("Left Back Touch Sensor", touchSensors.getLeft()? "pressed":"not pressed");
-            telemetry.addData("Right Back Touch Sensor", touchSensors.getRight()? "pressed":"not pressed");
-            telemetry.addData("Gamepad B left stick position", gamepad2.left_stick_y);
-            telemetry.addData("Gamepad B right stick position", gamepad2.right_stick_y);
-            telemetry.addData("Wrist Motor position", wrist.getCurrentPosition());
-            telemetry.addData("Arm Motor position", arm.getCurrentPosition());
-            telemetry.update();
 
-            t.update(gamepad1);
-            drive.update(pl);
-            armWrist.update(gamepad2);
-            collector.update(gamepad2);
-            gripper.update(gamepad2);
-
-            if (gamepad2.y && !holdArm && !pressed){
+            if (gamepad2.y && !holdArm && !pressed) {
                 holdArm = true;
                 pressed = true;
-            } else if(!gamepad2.y && pressed){
+                holdValue = gamepad2.left_stick_y;
+            } else if (!gamepad2.y && pressed) {
                 pressed = false;
-            }  else if (gamepad2.y && holdArm && !pressed){
+            } else if (gamepad2.y && holdArm && !pressed) {
                 holdArm = false;
                 pressed = true;
             }
 
-            
+            if (holdArm) {
+                armWrist.update(holdValue);
+                telemetry.addData("Holding", holdArm);
+                telemetry.addData("Pressed", pressed);
+                telemetry.addData("hold value", holdValue);
+                telemetry.update();
+            } else {
+                pl = t.getPowerLevel(1, 1);
+                telemetry.addData("Status", "Running");
+                telemetry.addData("Intake", collector.getPercentage());
+                telemetry.addData("gripper", gripper.getState() ? "open" : "closed");
+                telemetry.addData("gripper value", grab.getPosition());
+                telemetry.addData("Gamepad B left stick position", gamepad2.left_stick_y);
+                telemetry.addData("Gamepad B right stick position", gamepad2.right_stick_y);
+                telemetry.addData("Wrist Motor position", wrist.getCurrentPosition());
+                telemetry.addData("Arm Motor position", arm.getCurrentPosition());
+                telemetry.addData("Holding", holdArm);
+                telemetry.addData("hold value", holdValue);
+                telemetry.addData("Pressed", pressed);
+                telemetry.update();
+
+                t.update(gamepad1);
+                drive.update(pl);
+                collector.update(gamepad2);
+                gripper.update(gamepad2);
+                armWrist.update(gamepad2);
+            }
+
+
+
+
         }
     }
 

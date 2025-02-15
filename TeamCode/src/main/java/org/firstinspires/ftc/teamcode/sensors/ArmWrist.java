@@ -64,4 +64,8 @@ public class ArmWrist {
         arm.setPower(gamepad2.left_stick_y*.5);
         wrist.setPower(gamepad2.right_stick_y*-.5);
     }
+
+    public void update(double armPower){
+        arm.setPower(armPower*.5);
+    }
 }
