@@ -1,8 +1,10 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.sensors;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.Sleeper;
 
 import java.util.Locale;
 
@@ -29,6 +31,20 @@ public class Collector {
         this.max = max;
         this.min = min;
         this.l =l;
+    }
+
+    public void AutoTakeIn() {
+        if ((intakeServo.getPosition()%1) < max){
+            intakeServo.setPosition(max);
+            l.sleepFor(25);
+        }
+    }
+
+    public void AutoDropOff() {
+        if ((intakeServo.getPosition()%1) > min){
+            intakeServo.setPosition(min);
+            l.sleepFor(25);
+        }
     }
 
     /**

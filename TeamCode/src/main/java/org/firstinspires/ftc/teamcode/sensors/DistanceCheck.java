@@ -1,13 +1,14 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.sensors;
 
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @SuppressWarnings("unused")
-public class FrontCollisionAvoidance {
+public class DistanceCheck
+{
     private final DistanceSensor leftSensor, rightSensor;
-    public FrontCollisionAvoidance(DistanceSensor left, DistanceSensor right) {
+    public DistanceCheck(DistanceSensor left, DistanceSensor right) {
         this.leftSensor = left;
         this.rightSensor = right;
     }

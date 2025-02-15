@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.sensors;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -19,12 +19,12 @@ public class Gripper {
      * @param min The closed position of the gripper.
      * @param max The open position of the gripper.
      */
-    Gripper(Servo gripperServo, double min, double max){
+    public Gripper(Servo gripperServo, double min, double max){
         this.gripperServo = gripperServo;
         this.max = max;
         this.min = min;
-        this.gripperServo.setPosition(min);
-        this.isGripperOpen = false;
+        isGripperOpen = true;
+        close();
     }
 
     /**
@@ -33,7 +33,7 @@ public class Gripper {
     public void open(){
         if (!isGripperOpen && !isMoving){
             isMoving = true;
-            gripperServo.setPosition(max);
+            gripperServo.setPosition(min);
             isGripperOpen = true;
             isMoving = false;
         }
@@ -44,7 +44,7 @@ public class Gripper {
     public void close(){
         if (isGripperOpen && ! isMoving){
             isMoving = true;
-            gripperServo.setPosition(min);
+            gripperServo.setPosition(max);
             isGripperOpen = false;
             isMoving = false;
         }
