@@ -38,11 +38,11 @@ public class InitialStateLiftSpecimen extends AutoModeState {
         double distanceToTarget = distanceFromWall - TARGET_DISTANCE;
 
         armWrist.SetPosition(0,ARM_LIFT_DISTANCE);
-        mainDrive.MoveForward(18);
+        mainDrive.MoveForward(21);
         sleeper.sleepFor(1000);
         armWrist.SetPosition(0,DROP_DISTANCE);
         sleeper.sleepFor(1000);
-        mainDrive.MoveForward(-18);
+        mainDrive.MoveForward(-21);
         armWrist.SetPosition(0,0);
     }
 }
